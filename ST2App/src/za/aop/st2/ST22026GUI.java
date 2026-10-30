@@ -22,6 +22,8 @@ import javax.swing.table.DefaultTableModel;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.SwingWorker;
 import javax.swing.border.LineBorder;
@@ -236,13 +238,13 @@ public class ST22026GUI extends JFrame {
                     //WRITE YOUR CODE HERE
                     
                     String url = "jdbc:derby://localhost:1527/LabDB";
-                    String name = "app";
+                    String user = "app";
                     String pass = "app";
                     
-                    conn = DriverManager.getConnection(url, url, pass);
+                    conn = DriverManager.getConnection(url, user, pass);
                     
-                    if(conn.isClosed()){
-                        lblStatus.setText("CONNECTED");
+                    if(!conn.isClosed()){
+                        lblStatus.setText("STATUS: CONNECTED");
                         btnViewRecords.setEnabled(true);
                         btnResetEquipCondition.setEnabled(true);
                         btnAddEquipment.setEnabled(true);
@@ -261,7 +263,34 @@ public class ST22026GUI extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             //WRITE YOUR CODE HERE
+            String sql = "SELECT * FROM LAB_EQUIPMENT "
+                    + "ORDER BY EQUIPMENT_ID ASC";
             
+            tblData.setRowCount(0);
+            
+            try {
+                Statement state = conn.createStatement();
+                
+                ResultSet rs = state.executeQuery(sql);
+                
+                while(rs.next()){
+                    Object[] row = {
+                        rs.getInt("EQUIPMENT_ID"),
+                        rs.getString("NAME"),
+                        rs.getString("DEPARTMENT"),
+                        rs.getDate("PURCHASE_DATE"),
+                        rs.getString("CONDITION"),
+                        rs.getBoolean("IN_USE"),
+                        rs.getDouble("PRICE")
+                    };
+                    
+                    tblData.addRow(row);
+                    
+                }
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(ST22026GUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
             
         }
 

@@ -235,7 +235,18 @@ public class ST22026GUI extends JFrame {
                 protected Void doInBackground() throws Exception {
                     //WRITE YOUR CODE HERE
                     
+                    String url = "jdbc:derby://localhost:1527/LabDB";
+                    String name = "app";
+                    String pass = "app";
                     
+                    conn = DriverManager.getConnection(url, url, pass);
+                    
+                    if(conn.isClosed()){
+                        lblStatus.setText("CONNECTED");
+                        btnViewRecords.setEnabled(true);
+                        btnResetEquipCondition.setEnabled(true);
+                        btnAddEquipment.setEnabled(true);
+                    }
                     
                     return null;
                 }

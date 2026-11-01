@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
+import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
@@ -241,13 +242,16 @@ public class ST22026GUI extends JFrame {
                     String user = "app";
                     String pass = "app";
                     
-                    conn = DriverManager.getConnection(url, user, pass);
+                    try{
+                        conn = DriverManager.getConnection(url, user, pass);                    
                     
-                    if(!conn.isClosed()){
                         lblStatus.setText("STATUS: CONNECTED");
                         btnViewRecords.setEnabled(true);
                         btnResetEquipCondition.setEnabled(true);
                         btnAddEquipment.setEnabled(true);
+                        
+                    } catch(SQLException ex){
+                        JOptionPane.showMessageDialog(rootPane, "Database error: " + ex.getMessage());
                     }
                     
                     return null;

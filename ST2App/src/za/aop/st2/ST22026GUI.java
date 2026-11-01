@@ -238,7 +238,7 @@ public class ST22026GUI extends JFrame {
                 protected Void doInBackground() throws Exception {
                     //WRITE YOUR CODE HERE
                     
-                    String url = "jdbc:derby://localhost:1527/LabDB";
+                    String url = "jdbc:derby://localhost:1527/labDB";
                     String user = "app";
                     String pass = "app";
                     
@@ -306,8 +306,22 @@ public class ST22026GUI extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             //WRITE YOUR CODE HERE
+            String query = "UPDATE APP.LAB_EQUIPMENT "
+                    + "SET CONDITION = ?  "
+                    + "WHERE DEPARTMENT = ? ";
             
-            
+            try(PreparedStatement ps = conn.prepareStatement(query)){
+                ps.setString(1, "Used");
+                ps.setString(2, "INFORMATICS");
+                
+                int row = ps.executeUpdate();
+                if(row > 0){
+                    JOptionPane.showMessageDialog(rootPane, row + " equipments in Informatics");
+                    btnViewRecords.doClick();
+                }
+            } catch(SQLException ex){
+                JOptionPane.showMessageDialog(rootPane, "Database error: " + ex.getMessage());
+            }
         }
     }
     
